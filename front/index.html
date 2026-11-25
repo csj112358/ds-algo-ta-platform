@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="数据结构与算法助教平台 —— 知识库问答、真实工具调用、CrewAI 学习报告">
+<title>数据结构与算法助教平台</title>
+<link rel="stylesheet" href="/static/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌳</text></svg>">
+<script>
+/* 在首帧之前定好主题，避免深色用户看到白色闪屏 */
+(function () {
+  try {
+    var t = localStorage.getItem('dsa.theme.v1');
+    if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+</script>
+</head>
+<body>
+
+<!-- ══════════ 图标精灵 ══════════ -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M4.5 12h13m0 0-5.5-5.5M17.5 12 12 17.5"/></symbol>
+  <symbol id="i-wand" viewBox="0 0 24 24"><path d="m4 20 10-10M14 4v-1M18.5 5.5 19 5M20 10h1M16.5 8.5l.7-.7M17 14l1.5 1.5M11 3.5 9.5 5"/><circle cx="16" cy="8" r="3.2"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 5.5v15"/><path d="M19 18v3H6.5"/></symbol>
+  <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a4.5 4.5 0 0 1 5.9 5.9l-9 9a2.1 2.1 0 0 1-3-3z"/><path d="m6.5 13.5-3 3a2.1 2.1 0 1 0 3 3l3-3"/><path d="M14.7 6.3 17.5 3.5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20.5 12c0 4.1-3.8 7.5-8.5 7.5a10 10 0 0 1-2.6-.34L4.5 21l1.2-3.6A7.2 7.2 0 0 1 3.5 12c0-4.1 3.8-7.5 8.5-7.5s8.5 3.4 8.5 7.5Z"/></symbol>
+  <symbol id="i-report" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.3 3.1-5.5 7-5.5s7 2.2 7 5.5"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="m9 17-5-5 5-5M15 7l5 5-5 5"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11m0 0 4-4m-4 4-4-4"/><path d="M4.5 19h15"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V5.2A1.2 1.2 0 0 1 10.7 4h2.6a1.2 1.2 0 0 1 1.2 1.2V7"/><path d="M6.5 7l.8 11.3A2 2 0 0 0 9.3 20h5.4a2 2 0 0 0 2-1.7L17.5 7"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9.5 6 6 6-6"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2.5 12h2M19.5 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.2A8.4 8.4 0 1 1 9.8 4a6.9 6.9 0 0 0 10.2 10.2Z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5.5M12 16.2v.3"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5.3l3.2 2"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13.5 3 5.8 13.2h5l-.3 7.8 7.7-10.2h-5z"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3.5 13.7 9 19 10.7 13.7 12.4 12 17.9 10.3 12.4 5 10.7 10.3 9z"/><path d="M18.5 16.5l.7 2.1 2.1.7-2.1.7-.7 2.1-.7-2.1-2.1-.7 2.1-.7z"/></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7.5" ry="3"/><path d="M4.5 6v12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V6"/><path d="M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3"/></symbol>
+  <symbol id="i-raw" viewBox="0 0 24 24"><path d="M9.5 4.5H6a1.5 1.5 0 0 0-1.5 1.5v12A1.5 1.5 0 0 0 6 19.5h3.5"/><path d="M14.5 4.5H18a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5h-3.5"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24"><path d="M4 8h11m0 0-3-3m3 3-3 3"/><path d="M20 16H9m0 0 3-3m-3 3 3 3"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.5v13M5.5 12h13"/></symbol>
+</svg>
+
+<div class="app" id="app">
+
+  <!-- ══════════ 侧边栏 ══════════ -->
+  <aside class="sidebar" id="sidebar" aria-label="侧边栏">
+    <div class="side-head">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#i-sparkle"/></svg>
+        </span>
+        <span class="brand-text">
+          <strong>数据结构与算法</strong>
+          <small>课程助教平台</small>
+        </span>
+      </div>
+      <button class="icon-btn side-close" id="sideClose" type="button" aria-label="关闭侧边栏">
+        <svg viewBox="0 0 24 24"><use href="#i-close"/></svg>
+      </button>
+    </div>
+
+    <div class="side-scroll">
+
+      <!-- 学生身份 -->
+      <section class="panel" aria-labelledby="p-student">
+        <h2 class="panel-title" id="p-student">当前学生</h2>
+        <button class="student-card" id="studentSwitch" type="button"
+                aria-haspopup="dialog" aria-expanded="false" title="切换学生">
+          <span class="avatar" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-user"/></svg></span>
+          <span class="student-fields">
+            <span class="student-name" id="studentName">未选择学生</span>
+            <span class="student-hint" id="studentHint">用于查库、判题入库与学习报告</span>
+          </span>
+          <svg class="student-chevron" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron"/></svg>
+        </button>
+      </section>
+
+      <!-- 快速提问 -->
+      <section class="panel" aria-labelledby="p-quick">
+        <h2 class="panel-title" id="p-quick">试试这些问题</h2>
+        <div class="chips" id="quickChips">
+          <button class="chip" type="button" data-route="rag"   data-q="队列的入队和出队时间复杂度是多少">队列入队出队的时间复杂度？</button>
+          <button class="chip" type="button" data-route="rag"   data-q="什么是循环队列，为什么要用循环队列">什么是循环队列？</button>
+          <button class="chip" type="button" data-route="tool"  data-q="现在几点？今天几号，星期几？">现在几点？</button>
+          <button class="chip" type="button" data-route="tool"  data-q="我链表做了几题？平均掌握度是多少？">我链表做了几题？</button>
+          <button class="chip" type="button" data-route="tool"  data-q="我的错题有哪些？">我的错题有哪些？</button>
+          <button class="chip" type="button" data-route="tool"  data-q="什么是红黑树？">什么是红黑树？</button>
+          <button class="chip" type="button" data-route="chat"  data-q="你好呀，你能帮我做什么？">你好呀</button>
+          <button class="chip" type="button" data-route="report" data-q="给我生成一份学习报告">生成学习报告</button>
+        </div>
+      </section>
+
+      <!-- 四路分流 -->
+      <section class="panel" aria-labelledby="p-route">
+        <h2 class="panel-title" id="p-route">四路自动分流</h2>
+        <p class="panel-note">系统先判断意图，再决定由谁回答。</p>
+        <ul class="route-legend">
+          <li data-route="report"><span class="dot"></span><div><b>学习报告</b><small>CrewAI 研究员 + 写手</small></div></li>
+          <li data-route="tool"><span class="dot"></span><div><b>工具调用</b><small>跑代码 / 查记录 / 时间 / 百科</small></div></li>
+          <li data-route="rag"><span class="dot"></span><div><b>知识库检索</b><small>课程文档 RAG，带来源</small></div></li>
+          <li data-route="chat"><span class="dot"></span><div><b>普通问答</b><small>模型直接回答</small></div></li>
+        </ul>
+      </section>
+
+      <!-- 会话统计 -->
+      <section class="panel" aria-labelledby="p-stats">
+        <h2 class="panel-title" id="p-stats">本次会话</h2>
+        <div class="stats" id="stats">
+          <div class="stat"><b id="statTotal">0</b><small>提问</small></div>
+          <div class="stat"><b id="statAvg">—</b><small>平均耗时</small></div>
+        </div>
+        <div class="route-bars" id="routeBars"></div>
+      </section>
+    </div>
+
+    <div class="side-foot">
+      <button class="ghost-btn" id="clearBtn" type="button">
+        <svg viewBox="0 0 24 24"><use href="#i-trash"/></svg><span>清空对话</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="scrim" id="scrim" hidden></div>
+
+  <!-- ══════════ 主区域 ══════════ -->
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn only-mobile" id="menuBtn" type="button" aria-label="打开侧边栏">
+        <svg viewBox="0 0 24 24"><use href="#i-menu"/></svg>
+      </button>
+      <div class="topbar-title">
+        <h1>助教对话</h1>
+        <p id="topbarSub">提问即可，系统自动选择回答方式</p>
+      </div>
+      <div class="topbar-actions">
+        <span class="conn" id="conn" data-state="idle" title="后端连接状态">
+          <span class="conn-dot"></span><span class="conn-text" id="connText">待连接</span>
+        </span>
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="切换深浅色" title="切换深浅色">
+          <svg viewBox="0 0 24 24" class="ic-sun"><use href="#i-sun"/></svg>
+          <svg viewBox="0 0 24 24" class="ic-moon"><use href="#i-moon"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="transcript" id="transcript" tabindex="-1" aria-live="polite" aria-label="对话记录">
+      <!-- 欢迎屏由 JS 注入 -->
+    </div>
+
+    <div class="composer-wrap">
+      <!-- 提示条挂在输入区上方：跟着输入框一起长高，永远不会压住输入框或正文 -->
+      <div class="toasts" id="toasts" aria-live="polite"></div>
+      <div class="composer-inner">
+        <div class="modes" id="modes" role="tablist" aria-label="回答方式">
+          <button class="mode is-active" role="tab" aria-selected="true"  type="button" data-mode="auto"   title="由模型判断走哪条路"><svg viewBox="0 0 24 24"><use href="#i-wand"/></svg><span>自动</span></button>
+          <button class="mode" role="tab" aria-selected="false" type="button" data-mode="rag"    title="查课程知识库"><svg viewBox="0 0 24 24"><use href="#i-book"/></svg><span>知识库</span></button>
+          <button class="mode" role="tab" aria-selected="false" type="button" data-mode="tool"   title="调真实工具：跑代码、查库、时间、百科"><svg viewBox="0 0 24 24"><use href="#i-tool"/></svg><span>工具</span></button>
+          <button class="mode" role="tab" aria-selected="false" type="button" data-mode="chat"   title="闲聊与常识"><svg viewBox="0 0 24 24"><use href="#i-chat"/></svg><span>闲聊</span></button>
+          <button class="mode" role="tab" aria-selected="false" type="button" data-mode="report" title="CrewAI 生成 Markdown 学习报告"><svg viewBox="0 0 24 24"><use href="#i-report"/></svg><span>报告</span></button>
+        </div>
+
+        <form class="composer" id="composer" autocomplete="off">
+          <div class="composer-box" id="composerBox" data-code="false">
+            <textarea id="input" class="input" rows="1" placeholder="问点什么…&#10;例如：队列的入队和出队时间复杂度是多少？" aria-label="输入问题"></textarea>
+
+            <!-- 代码模式附加区 -->
+            <div class="code-extra" id="codeExtra" hidden>
+              <div class="code-bar">
+                <span class="code-tag"><svg viewBox="0 0 24 24"><use href="#i-code"/></svg>Python 3</span>
+                <button class="mini-btn" id="stdinToggle" type="button" aria-expanded="false">标准输入</button>
+              </div>
+              <label class="sr-only" for="stdin">标准输入</label>
+              <textarea id="stdin" class="stdin" rows="2" spellcheck="false" placeholder="标准输入（可选），程序需要 input() 时填写" hidden></textarea>
+            </div>
+
+            <div class="composer-foot">
+              <button class="toggle" id="codeToggle" type="button" aria-pressed="false" title="提交 Python 代码：真实运行 + 判题 + 自动入库">
+                <svg viewBox="0 0 24 24"><use href="#i-code"/></svg><span>代码</span>
+              </button>
+              <span class="hint" id="composerHint">Enter 发送 · Shift+Enter 换行</span>
+              <button class="send" id="sendBtn" type="submit" aria-label="发送">
+                <svg viewBox="0 0 24 24"><use href="#i-send"/></svg>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- 切换学生弹层 -->
+<dialog class="sheet" id="studentDialog" aria-labelledby="studentDialogTitle">
+  <div class="sheet-head">
+    <h2 class="sheet-title" id="studentDialogTitle">切换学生</h2>
+    <button class="icon-btn" id="studentDialogClose" type="button" aria-label="关闭">
+      <svg viewBox="0 0 24 24"><use href="#i-close"/></svg>
+    </button>
+  </div>
+  <div class="sheet-body">
+    <div class="field">
+      <label class="field-label" for="studentIdInput">学号</label>
+      <input id="studentIdInput" class="field-input" type="text" inputmode="numeric"
+             autocomplete="off" spellcheck="false" placeholder="输入学号后回车切换">
+    </div>
+    <ul class="student-list" id="studentList"></ul>
+    <form class="student-add" id="studentAddForm">
+      <label class="sr-only" for="newStudentName">学生姓名</label>
+      <input id="newStudentName" class="student-add-input" type="text" autocomplete="off"
+             spellcheck="false" placeholder="新学生姓名，如 xiaohong" maxlength="24">
+      <button class="student-add-btn" id="studentAddBtn" type="submit">
+        <svg viewBox="0 0 24 24"><use href="#i-plus"/></svg><span>添加</span>
+      </button>
+    </form>
+  </div>
+</dialog>
+
+<script src="/static/markdown.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
